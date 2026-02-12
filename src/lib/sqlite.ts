@@ -41,12 +41,6 @@ export async function initDatabase(existingData?: ArrayLike<number>): Promise<Da
       );
 
       CREATE INDEX IF NOT EXISTS idx_msg_conv ON message(conversation_id);
-
-      CREATE VIRTUAL TABLE IF NOT EXISTS message_fts USING fts5(
-        content,
-        conversation_id UNINDEXED,
-        message_id UNINDEXED
-      );
     `);
   }
 
@@ -101,12 +95,6 @@ export function insertConversation(
       ]
     );
 
-    // Insert into FTS
-    db.run(
-      `INSERT INTO message_fts (content, conversation_id, message_id)
-       VALUES (?, ?, last_insert_rowid())`,
-      [msg.content, serverId]
-    );
   }
 }
 
@@ -197,25 +185,34 @@ export interface SearchResult {
 }
 
 export function searchMessages(db: Database, query: string): SearchResult[] {
-  const safeQuery = query.replace(/"/g, '""');
+  const safeQuery = query.replace(/'/g, "''").replace(/%/g, "\\%").replace(/_/g, "\\_");
   const results = db.exec(
-    `SELECT m.conversation_id, c.title, c.platform, snippet(message_fts, 0, '<mark>', '</mark>', '...', 40) as snippet, msg.role
-     FROM message_fts m
+    `SELECT m.conversation_id, c.title, c.platform, m.content, m.role
+     FROM message m
      JOIN conversation c ON c.id = m.conversation_id
-     JOIN message msg ON msg.id = m.message_id
-     WHERE message_fts MATCH '"${safeQuery}"'
-     ORDER BY rank
+     WHERE m.content LIKE '%${safeQuery}%' ESCAPE '\\'
      LIMIT 50`
   );
   if (!results.length) return [];
 
-  return results[0].values.map((row) => ({
-    conversation_id: row[0] as string,
-    title: row[1] as string,
-    platform: row[2] as string,
-    snippet: row[3] as string,
-    role: row[4] as string,
-  }));
+  return results[0].values.map((row) => {
+    const content = row[3] as string;
+    const idx = content.toLowerCase().indexOf(query.toLowerCase());
+    const start = Math.max(0, idx - 40);
+    const end = Math.min(content.length, idx + query.length + 40);
+    const before = content.slice(start, idx);
+    const match = content.slice(idx, idx + query.length);
+    const after = content.slice(idx + query.length, end);
+    const snippet = `${start > 0 ? "..." : ""}${before}<mark>${match}</mark>${after}${end < content.length ? "..." : ""}`;
+
+    return {
+      conversation_id: row[0] as string,
+      title: row[1] as string,
+      platform: row[2] as string,
+      snippet,
+      role: row[4] as string,
+    };
+  });
 }
 
 export function getConversationCount(db: Database): number {
