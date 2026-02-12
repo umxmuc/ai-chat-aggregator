@@ -6,15 +6,21 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "node -e \"const fs=require('fs'),p=require.resolve('sql.js/dist/sql-wasm.wasm');fs.copyFileSync(p,'public/sql-wasm.wasm');console.log('Copied sql-wasm.wasm to public/');\""
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "clsx": "^2.1.1",
+    "libsodium-wrappers-sumo": "^0.8.2",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "sql.js": "^1.14.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/libsodium-wrappers-sumo": "^0.7.8",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
