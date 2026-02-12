@@ -139,18 +139,17 @@ export function listConversations(
 }
 
 export function getConversation(db: Database, id: string) {
+  const safeId = id.replace(/'/g, "''");
   const convResult = db.exec(
     `SELECT id, platform, external_id, title, model, source_url, message_count, created_at, imported_at, metadata
-     FROM conversation WHERE id = ?`,
-    [id]
+     FROM conversation WHERE id = '${safeId}'`
   );
   if (!convResult.length || !convResult[0].values.length) return null;
 
   const row = convResult[0].values[0];
   const msgResult = db.exec(
     `SELECT role, content, position, created_at, metadata
-     FROM message WHERE conversation_id = ? ORDER BY position ASC`,
-    [id]
+     FROM message WHERE conversation_id = '${safeId}' ORDER BY position ASC`
   );
 
   return {
