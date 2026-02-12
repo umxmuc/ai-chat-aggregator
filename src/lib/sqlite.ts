@@ -70,11 +70,16 @@ export function insertConversation(
   serverId: string,
   importedAt: string
 ): void {
-  // Check if already exists
+  // Remove any previous partial import so we always get complete data
+  const safeExtId = conversation.external_id.replace(/'/g, "''");
   const existing = db.exec(
-    `SELECT 1 FROM conversation WHERE external_id = '${conversation.external_id.replace(/'/g, "''")}'`
+    `SELECT id FROM conversation WHERE external_id = '${safeExtId}'`
   );
-  if (existing.length > 0 && existing[0].values.length > 0) return;
+  if (existing.length > 0 && existing[0].values.length > 0) {
+    const oldId = String(existing[0].values[0][0]).replace(/'/g, "''");
+    db.exec(`DELETE FROM message WHERE conversation_id = '${oldId}'`);
+    db.exec(`DELETE FROM conversation WHERE id = '${oldId}'`);
+  }
 
   const q = (s: string) => "'" + s.replace(/'/g, "''") + "'";
   const n = (s: string | null) => s === null ? "NULL" : q(s);

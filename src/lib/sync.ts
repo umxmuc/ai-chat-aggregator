@@ -73,21 +73,7 @@ export async function syncConversations(
       } catch (err) {
         totalFailed++;
         const errMsg = err instanceof Error ? err.message : String(err);
-        if (!firstError) {
-          // Include data shape info for debugging
-          try {
-            const debugPlain = await decrypt(
-              fromBase64(row.ciphertext),
-              fromBase64(row.nonce),
-              keys.encryptionKey
-            );
-            const parsed = JSON.parse(debugPlain);
-            const keys_list = Object.keys(parsed).join(', ');
-            firstError = `${errMsg} [keys: ${keys_list}] [platform=${parsed.platform}]`;
-          } catch {
-            firstError = errMsg;
-          }
-        }
+        if (!firstError) firstError = errMsg;
         console.warn(`Failed to decrypt conversation ${row.id}:`, err);
       }
     }
