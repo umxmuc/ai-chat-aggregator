@@ -17,6 +17,7 @@ interface AppState {
   db: Database;
   syncing: boolean;
   syncProgress: SyncProgress | null;
+  syncError: string | null;
   lastSyncedAt: string | null;
   triggerSync: () => Promise<number>;
 }
@@ -44,12 +45,14 @@ export function AppProvider({
 }) {
   const [syncing, setSyncing] = useState(false);
   const [syncProgress, setSyncProgress] = useState<SyncProgress | null>(null);
+  const [syncError, setSyncError] = useState<string | null>(null);
   const [lastSyncedAt, setLastSyncedAt] = useState(initialLastSynced);
 
   const triggerSync = useCallback(async () => {
     if (syncing) return 0;
     setSyncing(true);
     setSyncProgress(null);
+    setSyncError(null);
     try {
       const count = await syncConversations(db, orgSlug, keys, (p) => {
         setSyncProgress(p);
@@ -58,6 +61,11 @@ export function AppProvider({
         }
       });
       return count;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Sync failed";
+      setSyncError(msg);
+      console.error("Sync error:", err);
+      return 0;
     } finally {
       setSyncing(false);
     }
@@ -71,6 +79,7 @@ export function AppProvider({
         db,
         syncing,
         syncProgress,
+        syncError,
         lastSyncedAt,
         triggerSync,
       }}
