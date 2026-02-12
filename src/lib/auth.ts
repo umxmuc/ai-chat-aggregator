@@ -22,17 +22,8 @@ export async function authenticateRequest(
     throw new Error("Organization not found");
   }
 
-  // Hash the provided auth key material and compare
-  const encoder = new TextEncoder();
-  const hashBuffer = await crypto.subtle.digest(
-    "SHA-256",
-    encoder.encode(authKeyHex)
-  );
-  const hashHex = Array.from(new Uint8Array(hashBuffer))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-
-  if (hashHex !== org.auth_key_hash) {
+  // The client sends SHA-256(authKeyMaterial) as hex — compare directly
+  if (authKeyHex !== org.auth_key_hash) {
     throw new Error("Invalid credentials");
   }
 
