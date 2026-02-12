@@ -4,7 +4,7 @@ const sql = neon(process.env.NEON_DATABASE_URL!);
 
 export async function getOrgBySlug(slug: string) {
   const rows = await sql`
-    SELECT id, name, slug, salt, auth_key_hash, created_at
+    SELECT id, name, slug, encode(salt, 'base64') as salt_b64, auth_key_hash, created_at
     FROM org WHERE slug = ${slug}
   `;
   return rows[0] ?? null;
@@ -47,7 +47,8 @@ export async function getEncryptedConversations(
 ) {
   if (after) {
     return sql`
-      SELECT id, nonce, ciphertext, platform, external_id, imported_at
+      SELECT id, encode(nonce, 'base64') as nonce_b64, encode(ciphertext, 'base64') as ciphertext_b64,
+             platform, external_id, imported_at
       FROM encrypted_conversation
       WHERE org_id = ${orgId} AND imported_at > ${after}
       ORDER BY imported_at ASC
@@ -55,7 +56,8 @@ export async function getEncryptedConversations(
     `;
   }
   return sql`
-    SELECT id, nonce, ciphertext, platform, external_id, imported_at
+    SELECT id, encode(nonce, 'base64') as nonce_b64, encode(ciphertext, 'base64') as ciphertext_b64,
+           platform, external_id, imported_at
     FROM encrypted_conversation
     WHERE org_id = ${orgId}
     ORDER BY imported_at ASC

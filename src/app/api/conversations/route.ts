@@ -60,25 +60,14 @@ export async function GET(request: Request) {
 
     const rows = await getEncryptedConversations(auth.orgId, after, limit);
 
-    const conversations = rows.map((row: Record<string, unknown>) => {
-      const nonce =
-        row.nonce instanceof Buffer
-          ? row.nonce.toString("base64")
-          : Buffer.from(row.nonce as ArrayBuffer).toString("base64");
-      const ciphertext =
-        row.ciphertext instanceof Buffer
-          ? row.ciphertext.toString("base64")
-          : Buffer.from(row.ciphertext as ArrayBuffer).toString("base64");
-
-      return {
-        id: row.id,
-        nonce,
-        ciphertext,
-        platform: row.platform,
-        external_id: row.external_id,
-        imported_at: row.imported_at,
-      };
-    });
+    const conversations = rows.map((row: Record<string, unknown>) => ({
+      id: row.id,
+      nonce: row.nonce_b64,
+      ciphertext: row.ciphertext_b64,
+      platform: row.platform,
+      external_id: row.external_id,
+      imported_at: row.imported_at,
+    }));
 
     return NextResponse.json({
       conversations,

@@ -13,13 +13,7 @@ export async function GET(
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    // salt comes as a Buffer from Neon — convert to base64
-    const saltBase64 =
-      org.salt instanceof Buffer
-        ? org.salt.toString("base64")
-        : Buffer.from(org.salt).toString("base64");
-
-    return NextResponse.json({ salt: saltBase64 });
+    return NextResponse.json({ salt: org.salt_b64 });
   } catch (error) {
     console.error("Get salt error:", error);
     return NextResponse.json(
