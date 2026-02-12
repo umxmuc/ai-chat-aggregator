@@ -76,43 +76,24 @@ export function insertConversation(
   );
   if (existing.length > 0 && existing[0].values.length > 0) return;
 
-  db.run(
+  const q = (s: string) => "'" + s.replace(/'/g, "''") + "'";
+  const n = (s: string | null) => s === null ? "NULL" : q(s);
+
+  db.exec(
     `INSERT INTO conversation (id, platform, external_id, title, model, source_url, message_count, created_at, exported_at, imported_at, metadata)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [
-      serverId,
-      conversation.platform,
-      conversation.external_id,
-      conversation.title,
-      conversation.model ?? null,
-      conversation.source_url,
-      conversation.messages.length,
-      conversation.created_at,
-      conversation.exported_at,
-      importedAt,
-      JSON.stringify(conversation.metadata),
-    ]
+     VALUES (${q(serverId)}, ${q(conversation.platform)}, ${q(conversation.external_id)}, ${q(conversation.title)}, ${n(conversation.model ?? null)}, ${q(conversation.source_url)}, ${conversation.messages.length}, ${q(conversation.created_at)}, ${q(conversation.exported_at)}, ${q(importedAt)}, ${q(JSON.stringify(conversation.metadata))})`
   );
 
   for (const msg of conversation.messages) {
-    db.run(
+    db.exec(
       `INSERT INTO message (conversation_id, role, content, position, created_at, metadata)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [
-        serverId,
-        msg.role,
-        msg.content,
-        msg.position,
-        msg.created_at ?? null,
-        JSON.stringify(msg.metadata),
-      ]
+       VALUES (${q(serverId)}, ${q(msg.role)}, ${q(msg.content)}, ${msg.position}, ${n(msg.created_at ?? null)}, ${q(JSON.stringify(msg.metadata))})`
     );
 
     // Insert into FTS index
-    db.run(
+    db.exec(
       `INSERT INTO message_fts (content, conversation_id, message_id)
-       VALUES (?, ?, last_insert_rowid())`,
-      [msg.content, serverId]
+       VALUES (${q(msg.content)}, ${q(serverId)}, last_insert_rowid())`
     );
   }
 }
