@@ -33,6 +33,7 @@ export async function syncConversations(
   let after = getLastSyncedAt(orgSlug) || undefined;
   let totalImported = 0;
   let totalFailed = 0;
+  let firstError: string | null = null;
 
   while (true) {
     const params = new URLSearchParams({ limit: "100" });
@@ -71,6 +72,8 @@ export async function syncConversations(
         lastSuccessTimestamp = row.imported_at;
       } catch (err) {
         totalFailed++;
+        const errMsg = err instanceof Error ? err.message : String(err);
+        if (!firstError) firstError = errMsg;
         console.warn(`Failed to decrypt conversation ${row.id}:`, err);
       }
     }
@@ -102,7 +105,7 @@ export async function syncConversations(
 
   if (totalFailed > 0 && totalImported === 0) {
     throw new Error(
-      `Decryption failed for all ${totalFailed} conversations. Check your password.`
+      `Decryption failed for all ${totalFailed} conversations: ${firstError}`
     );
   }
 
