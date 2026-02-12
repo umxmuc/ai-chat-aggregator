@@ -14,35 +14,42 @@ export async function initDatabase(existingData?: ArrayLike<number>): Promise<Da
 
   dbInstance = existingData ? new SQL.Database(existingData) : new SQL.Database();
 
-  if (!existingData) {
+  // Always apply schema — IF NOT EXISTS makes this safe for existing databases
+  dbInstance.run(`
+    CREATE TABLE IF NOT EXISTS conversation (
+      id TEXT PRIMARY KEY,
+      platform TEXT NOT NULL,
+      external_id TEXT NOT NULL UNIQUE,
+      title TEXT NOT NULL,
+      model TEXT,
+      source_url TEXT,
+      message_count INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL,
+      exported_at TEXT NOT NULL,
+      imported_at TEXT NOT NULL,
+      metadata TEXT
+    );
+
+    CREATE TABLE IF NOT EXISTS message (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      conversation_id TEXT NOT NULL REFERENCES conversation(id),
+      role TEXT NOT NULL,
+      content TEXT NOT NULL,
+      position INTEGER NOT NULL,
+      created_at TEXT,
+      metadata TEXT
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_msg_conv ON message(conversation_id);
+  `);
+
+  // FTS5 virtual tables don't support IF NOT EXISTS — check manually
+  const ftsExists = dbInstance.exec(
+    "SELECT 1 FROM sqlite_master WHERE type='table' AND name='message_fts'"
+  );
+  if (!ftsExists.length || !ftsExists[0].values.length) {
     dbInstance.run(`
-      CREATE TABLE IF NOT EXISTS conversation (
-        id TEXT PRIMARY KEY,
-        platform TEXT NOT NULL,
-        external_id TEXT NOT NULL UNIQUE,
-        title TEXT NOT NULL,
-        model TEXT,
-        source_url TEXT,
-        message_count INTEGER NOT NULL DEFAULT 0,
-        created_at TEXT NOT NULL,
-        exported_at TEXT NOT NULL,
-        imported_at TEXT NOT NULL,
-        metadata TEXT
-      );
-
-      CREATE TABLE IF NOT EXISTS message (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        conversation_id TEXT NOT NULL REFERENCES conversation(id),
-        role TEXT NOT NULL,
-        content TEXT NOT NULL,
-        position INTEGER NOT NULL,
-        created_at TEXT,
-        metadata TEXT
-      );
-
-      CREATE INDEX IF NOT EXISTS idx_msg_conv ON message(conversation_id);
-
-      CREATE VIRTUAL TABLE IF NOT EXISTS message_fts USING fts5(
+      CREATE VIRTUAL TABLE message_fts USING fts5(
         content,
         conversation_id UNINDEXED,
         message_id UNINDEXED
@@ -70,7 +77,7 @@ export function insertConversation(
   if (existing.length > 0 && existing[0].values.length > 0) return;
 
   db.run(
-    `INSERT OR IGNORE INTO conversation (id, platform, external_id, title, model, source_url, message_count, created_at, exported_at, imported_at, metadata)
+    `INSERT INTO conversation (id, platform, external_id, title, model, source_url, message_count, created_at, exported_at, imported_at, metadata)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       serverId,
@@ -88,7 +95,7 @@ export function insertConversation(
   );
 
   for (const msg of conversation.messages) {
-    const result = db.run(
+    db.run(
       `INSERT INTO message (conversation_id, role, content, position, created_at, metadata)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [
@@ -101,7 +108,7 @@ export function insertConversation(
       ]
     );
 
-    // Insert into FTS
+    // Insert into FTS index
     db.run(
       `INSERT INTO message_fts (content, conversation_id, message_id)
        VALUES (?, ?, last_insert_rowid())`,
