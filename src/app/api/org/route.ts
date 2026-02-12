@@ -30,8 +30,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const saltBuffer = Buffer.from(body.salt, "base64");
-    const org = await createOrg(body.name, body.slug, saltBuffer, body.auth_key_hash);
+    const org = await createOrg(body.name, body.slug, body.salt, body.auth_key_hash);
 
     return NextResponse.json(org, { status: 201 });
   } catch (error) {

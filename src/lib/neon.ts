@@ -13,12 +13,12 @@ export async function getOrgBySlug(slug: string) {
 export async function createOrg(
   name: string,
   slug: string,
-  salt: Buffer,
+  saltB64: string,
   authKeyHash: string
 ) {
   const rows = await sql`
     INSERT INTO org (name, slug, salt, auth_key_hash)
-    VALUES (${name}, ${slug}, ${salt}, ${authKeyHash})
+    VALUES (${name}, ${slug}, decode(${saltB64}, 'base64'), ${authKeyHash})
     RETURNING id, name, slug, created_at
   `;
   return rows[0];
@@ -26,14 +26,14 @@ export async function createOrg(
 
 export async function insertEncryptedConversation(
   orgId: string,
-  nonce: Buffer,
-  ciphertext: Buffer,
+  nonceB64: string,
+  ciphertextB64: string,
   platform: string,
   externalId: string
 ) {
   const rows = await sql`
     INSERT INTO encrypted_conversation (org_id, nonce, ciphertext, platform, external_id)
-    VALUES (${orgId}, ${nonce}, ${ciphertext}, ${platform}, ${externalId})
+    VALUES (${orgId}, decode(${nonceB64}, 'base64'), decode(${ciphertextB64}, 'base64'), ${platform}, ${externalId})
     ON CONFLICT (org_id, platform, external_id) DO NOTHING
     RETURNING id
   `;

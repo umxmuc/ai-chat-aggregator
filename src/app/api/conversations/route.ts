@@ -18,13 +18,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const nonceBuffer = Buffer.from(body.nonce, "base64");
-    const ciphertextBuffer = Buffer.from(body.ciphertext, "base64");
-
     const result = await insertEncryptedConversation(
       auth.orgId,
-      nonceBuffer,
-      ciphertextBuffer,
+      body.nonce,
+      body.ciphertext,
       body.platform,
       body.external_id
     );
