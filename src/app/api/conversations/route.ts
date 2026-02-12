@@ -60,10 +60,13 @@ export async function GET(request: Request) {
 
     const rows = await getEncryptedConversations(auth.orgId, after, limit);
 
+    // PostgreSQL encode(bytea, 'base64') inserts newlines every 76 chars — strip them
+    const stripNewlines = (s: unknown) => (s as string).replace(/\n/g, "");
+
     const conversations = rows.map((row: Record<string, unknown>) => ({
       id: row.id,
-      nonce: row.nonce_b64,
-      ciphertext: row.ciphertext_b64,
+      nonce: stripNewlines(row.nonce_b64),
+      ciphertext: stripNewlines(row.ciphertext_b64),
       platform: row.platform,
       external_id: row.external_id,
       imported_at: row.imported_at,
