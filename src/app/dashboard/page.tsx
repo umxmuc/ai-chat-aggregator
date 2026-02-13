@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useApp } from "@/lib/context";
+import { exportDatabase } from "@/lib/sqlite";
 import { SearchBar } from "@/components/SearchBar";
 import { ConversationList } from "@/components/ConversationList";
 import { SyncStatus } from "@/components/SyncStatus";
 
 export default function DashboardPage() {
-  const { triggerSync } = useApp();
+  const { db, triggerSync } = useApp();
 
   // Auto-sync on mount
   useEffect(() => {
@@ -15,13 +16,32 @@ export default function DashboardPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleExportDb = useCallback(() => {
+    const data = exportDatabase(db);
+    const blob = new Blob([data], { type: "application/x-sqlite3" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "chats.db";
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [db]);
+
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
           Conversations
         </h2>
-        <SyncStatus />
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleExportDb}
+            className="rounded px-2 py-1 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+          >
+            Export DB
+          </button>
+          <SyncStatus />
+        </div>
       </div>
       <div className="mb-6">
         <SearchBar />
