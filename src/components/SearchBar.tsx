@@ -6,6 +6,21 @@ import { useApp } from "@/lib/context";
 import { searchMessages, type SearchResult } from "@/lib/sqlite";
 import { clsx } from "clsx";
 
+const PLATFORM_BADGE: Record<string, { label: string; classes: string }> = {
+  chatgpt: {
+    label: "GPT",
+    classes: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400",
+  },
+  claude: {
+    label: "Claude",
+    classes: "bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400",
+  },
+  "claude-code": {
+    label: "CC",
+    classes: "bg-teal-50 text-teal-600 dark:bg-teal-900/20 dark:text-teal-400",
+  },
+};
+
 export function SearchBar() {
   const { db } = useApp();
   const [query, setQuery] = useState("");
@@ -69,12 +84,10 @@ export function SearchBar() {
                 <span
                   className={clsx(
                     "rounded px-1.5 py-0.5 text-[10px] font-medium",
-                    r.platform === "chatgpt"
-                      ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400"
-                      : "bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400"
+                    PLATFORM_BADGE[r.platform]?.classes ?? "bg-slate-50 text-slate-600 dark:bg-slate-900/20 dark:text-slate-400"
                   )}
                 >
-                  {r.platform === "chatgpt" ? "GPT" : "Claude"}
+                  {PLATFORM_BADGE[r.platform]?.label ?? r.platform}
                 </span>
                 <span className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
                   {r.title}

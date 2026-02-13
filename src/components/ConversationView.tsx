@@ -6,6 +6,21 @@ import { clsx } from "clsx";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 
+const PLATFORM_BADGE: Record<string, { label: string; classes: string }> = {
+  chatgpt: {
+    label: "ChatGPT",
+    classes: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400",
+  },
+  claude: {
+    label: "Claude",
+    classes: "bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400",
+  },
+  "claude-code": {
+    label: "Claude Code",
+    classes: "bg-teal-50 text-teal-600 dark:bg-teal-900/20 dark:text-teal-400",
+  },
+};
+
 export function ConversationView({ id }: { id: string }) {
   const { db } = useApp();
   const conversation = getConversation(db, id);
@@ -29,12 +44,10 @@ export function ConversationView({ id }: { id: string }) {
           <span
             className={clsx(
               "rounded px-1.5 py-0.5 font-medium",
-              conversation.platform === "chatgpt"
-                ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400"
-                : "bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400"
+              PLATFORM_BADGE[conversation.platform]?.classes ?? "bg-slate-50 text-slate-600 dark:bg-slate-900/20 dark:text-slate-400"
             )}
           >
-            {conversation.platform === "chatgpt" ? "ChatGPT" : "Claude"}
+            {PLATFORM_BADGE[conversation.platform]?.label ?? conversation.platform}
           </span>
           {conversation.model && <span>{conversation.model}</span>}
           <span>{conversation.message_count} messages</span>

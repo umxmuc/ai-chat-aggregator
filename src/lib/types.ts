@@ -1,6 +1,6 @@
 // Conversation types (mirrored from ai-chat-exporter)
 export interface Conversation {
-  platform: "chatgpt" | "claude";
+  platform: "chatgpt" | "claude" | "claude-code";
   external_id: string;
   title: string;
   model?: string;

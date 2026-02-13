@@ -6,7 +6,22 @@ import { useApp } from "@/lib/context";
 import { listConversations, getConversationCount, type ConversationRow } from "@/lib/sqlite";
 import { clsx } from "clsx";
 
-const PLATFORMS = ["all", "chatgpt", "claude"] as const;
+const PLATFORMS = ["all", "chatgpt", "claude", "claude-code"] as const;
+
+const PLATFORM_BADGE: Record<string, { label: string; classes: string }> = {
+  chatgpt: {
+    label: "ChatGPT",
+    classes: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400",
+  },
+  claude: {
+    label: "Claude",
+    classes: "bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400",
+  },
+  "claude-code": {
+    label: "Claude Code",
+    classes: "bg-teal-50 text-teal-600 dark:bg-teal-900/20 dark:text-teal-400",
+  },
+};
 const PAGE_SIZE = 50;
 
 export function ConversationList() {
@@ -45,13 +60,13 @@ export function ConversationList() {
               setOffset(0);
             }}
             className={clsx(
-              "flex-1 rounded px-3 py-1.5 text-xs font-medium capitalize transition-colors",
+              "flex-1 rounded px-3 py-1.5 text-xs font-medium transition-colors",
               platform === p
                 ? "bg-blue-600 text-white dark:bg-blue-500"
                 : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
             )}
           >
-            {p}
+            {p === "all" ? "All" : PLATFORM_BADGE[p]?.label ?? p}
           </button>
         ))}
       </div>
@@ -82,12 +97,10 @@ export function ConversationList() {
                     <span
                       className={clsx(
                         "rounded px-1.5 py-0.5 font-medium",
-                        conv.platform === "chatgpt"
-                          ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400"
-                          : "bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400"
+                        PLATFORM_BADGE[conv.platform]?.classes ?? "bg-slate-50 text-slate-600 dark:bg-slate-900/20 dark:text-slate-400"
                       )}
                     >
-                      {conv.platform === "chatgpt" ? "ChatGPT" : "Claude"}
+                      {PLATFORM_BADGE[conv.platform]?.label ?? conv.platform}
                     </span>
                     <span>{conv.message_count} messages</span>
                     {conv.model && <span>{conv.model}</span>}

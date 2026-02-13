@@ -177,12 +177,15 @@ export interface SearchResult {
 
 export function searchMessages(db: Database, query: string): SearchResult[] {
   const safeQuery = query.replace(/'/g, "''").replace(/%/g, "\\%").replace(/_/g, "\\_");
+  // One result per conversation: pick the first matching message (lowest position)
   const results = db.exec(
     `SELECT m.conversation_id, c.title, c.platform, m.content, m.role
      FROM message m
      JOIN conversation c ON c.id = m.conversation_id
      WHERE m.content LIKE '%${safeQuery}%' ESCAPE '\\'
-     LIMIT 50`
+     GROUP BY m.conversation_id
+     ORDER BY c.created_at DESC
+     LIMIT 30`
   );
   if (!results.length) return [];
 
@@ -192,7 +195,11 @@ export function searchMessages(db: Database, query: string): SearchResult[] {
     const idx = lowerContent.indexOf(query.toLowerCase());
     const start = Math.max(0, idx - 40);
     const end = Math.min(content.length, idx + query.length + 40);
-    const snippet = `${start > 0 ? "..." : ""}${content.slice(start, end)}${end < content.length ? "..." : ""}`;
+    const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const before = esc(content.slice(start, idx));
+    const match = esc(content.slice(idx, idx + query.length));
+    const after = esc(content.slice(idx + query.length, end));
+    const snippet = `${start > 0 ? "..." : ""}${before}<mark>${match}</mark>${after}${end < content.length ? "..." : ""}`;
 
     return {
       conversation_id: row[0] as string,
