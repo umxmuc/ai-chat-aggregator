@@ -63,11 +63,26 @@ export function ConversationView({ id }: { id: string }) {
               Source
             </a>
           )}
-          {(conversation.metadata?.project_name || conversation.metadata?.project_uuid || conversation.metadata?.gizmo_id || conversation.metadata?.projectPath) && (
-            <span className="rounded bg-violet-50 px-1.5 py-0.5 font-medium text-violet-600 dark:bg-violet-900/20 dark:text-violet-400">
-              {(conversation.metadata.project_name as string) || (conversation.metadata.projectPath as string) || (conversation.metadata.gizmo_id as string) || (conversation.metadata.project_uuid as string)}
-            </span>
-          )}
+          {(() => {
+            const m = conversation.metadata;
+            const projectLabel = (m?.project_name as string) || (m?.projectPath as string);
+            const projectId = (m?.gizmo_id as string) || (m?.project_uuid as string);
+            if (projectLabel) {
+              return (
+                <span className="rounded bg-violet-50 px-1.5 py-0.5 font-medium text-violet-600 dark:bg-violet-900/20 dark:text-violet-400">
+                  {projectLabel}
+                </span>
+              );
+            }
+            if (projectId) {
+              return (
+                <span className="rounded bg-violet-50 px-1.5 py-0.5 font-medium text-violet-600 dark:bg-violet-900/20 dark:text-violet-400" title={projectId}>
+                  Project
+                </span>
+              );
+            }
+            return null;
+          })()}
         </div>
       </div>
 
