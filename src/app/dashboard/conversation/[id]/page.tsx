@@ -15,7 +15,7 @@ export default function ConversationPage({
     <div>
       <Link
         href="/dashboard"
-        className="mb-4 inline-block text-sm text-blue-600 transition-colors hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+        className="mb-4 inline-block text-sm font-medium text-blue-600 transition-colors hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
       >
         &larr; Back to conversations
       </Link>

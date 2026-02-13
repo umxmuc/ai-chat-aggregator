@@ -22,10 +22,10 @@ export function ConversationView({ id }: { id: string }) {
     <div>
       {/* Header */}
       <div className="mb-6 border-b border-slate-200 pb-4 dark:border-slate-800">
-        <h1 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+        <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">
           {conversation.title}
         </h1>
-        <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-400">
+        <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-slate-500">
           <span
             className={clsx(
               "rounded px-1.5 py-0.5 font-medium",
@@ -67,7 +67,7 @@ export function ConversationView({ id }: { id: string }) {
             )}
           >
             <div className={clsx(
-              "mb-1 text-xs font-medium",
+              "mb-1 text-sm font-semibold",
               msg.role === "user"
                 ? "text-blue-100"
                 : "text-slate-500 dark:text-slate-400"
@@ -75,7 +75,7 @@ export function ConversationView({ id }: { id: string }) {
               {msg.role === "user" ? "You" : msg.role === "assistant" ? "Assistant" : "System"}
             </div>
             <div className={clsx(
-              "prose prose-sm max-w-none",
+              "prose max-w-none",
               msg.role === "user"
                 ? "text-white prose-headings:text-white prose-strong:text-white prose-code:text-blue-100"
                 : "text-slate-800 dark:prose-invert dark:text-slate-200"

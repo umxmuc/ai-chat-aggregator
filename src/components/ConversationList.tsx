@@ -56,7 +56,7 @@ export function ConversationList() {
         ))}
       </div>
 
-      <p className="mb-3 text-xs text-slate-400">
+      <p className="mb-3 text-sm text-slate-500">
         {total} conversation{total !== 1 ? "s" : ""}
       </p>
 
@@ -75,10 +75,10 @@ export function ConversationList() {
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
-                  <h3 className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
+                  <h3 className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
                     {conv.title}
                   </h3>
-                  <div className="mt-1 flex items-center gap-2 text-xs text-slate-400">
+                  <div className="mt-1 flex items-center gap-2 text-xs font-medium text-slate-500">
                     <span
                       className={clsx(
                         "rounded px-1.5 py-0.5 font-medium",
@@ -93,7 +93,7 @@ export function ConversationList() {
                     {conv.model && <span>{conv.model}</span>}
                   </div>
                 </div>
-                <time className="shrink-0 text-xs text-slate-400">
+                <time className="shrink-0 text-xs font-medium text-slate-400">
                   {new Date(conv.created_at).toLocaleDateString()}
                 </time>
               </div>
