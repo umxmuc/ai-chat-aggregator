@@ -63,17 +63,12 @@ export function ConversationView({ id }: { id: string }) {
               Source
             </a>
           )}
-          {(conversation.metadata?.project_name || conversation.metadata?.project_uuid || conversation.metadata?.projectPath || conversation.metadata?.workspace_id) && (
+          {(conversation.metadata?.project_name || conversation.metadata?.project_uuid || conversation.metadata?.gizmo_id || conversation.metadata?.projectPath) && (
             <span className="rounded bg-violet-50 px-1.5 py-0.5 font-medium text-violet-600 dark:bg-violet-900/20 dark:text-violet-400">
-              {(conversation.metadata.project_name as string) || (conversation.metadata.projectPath as string) || (conversation.metadata.workspace_id as string) || (conversation.metadata.project_uuid as string)}
+              {(conversation.metadata.project_name as string) || (conversation.metadata.projectPath as string) || (conversation.metadata.gizmo_id as string) || (conversation.metadata.project_uuid as string)}
             </span>
           )}
         </div>
-        {conversation.metadata?._response_keys && (
-          <p className="mt-2 text-xs text-slate-400">
-            API fields: {(conversation.metadata._response_keys as string[]).join(", ")}
-          </p>
-        )}
       </div>
 
       {/* Messages */}
