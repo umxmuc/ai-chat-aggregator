@@ -6,7 +6,7 @@ export function SyncStatus() {
   const { syncing, syncProgress, syncError, lastSyncedAt, triggerSync } = useApp();
 
   return (
-    <div className="flex flex-col items-end gap-1 text-xs text-zinc-400">
+    <div className="flex flex-col items-end gap-1 text-xs text-slate-400">
       <div className="flex items-center gap-3">
         {syncing ? (
           <span className="flex items-center gap-1.5">
@@ -20,7 +20,7 @@ export function SyncStatus() {
             )}
             <button
               onClick={() => triggerSync()}
-              className="rounded px-2 py-1 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              className="rounded px-2 py-1 text-xs font-medium text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
             >
               Sync now
             </button>

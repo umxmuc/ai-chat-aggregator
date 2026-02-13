@@ -103,17 +103,17 @@ export function OrgLoginForm() {
   }
 
   return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+    <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
       {/* Mode tabs */}
-      <div className="mb-6 flex rounded-md border border-zinc-200 dark:border-zinc-700">
+      <div className="mb-6 flex rounded-md border border-slate-200 dark:border-slate-700">
         <button
           type="button"
           onClick={() => setMode("join")}
           className={clsx(
             "flex-1 rounded-l-md px-4 py-2 text-sm font-medium transition-colors",
             mode === "join"
-              ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-              : "text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              ? "bg-blue-600 text-white dark:bg-blue-500"
+              : "text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800"
           )}
         >
           Join Org
@@ -124,8 +124,8 @@ export function OrgLoginForm() {
           className={clsx(
             "flex-1 rounded-r-md px-4 py-2 text-sm font-medium transition-colors",
             mode === "create"
-              ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-              : "text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              ? "bg-blue-600 text-white dark:bg-blue-500"
+              : "text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800"
           )}
         >
           Create Org
@@ -135,7 +135,7 @@ export function OrgLoginForm() {
       <form onSubmit={mode === "join" ? handleJoin : handleCreate}>
         {mode === "create" && (
           <div className="mb-4">
-            <label htmlFor="name" className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <label htmlFor="name" className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
               Organization Name
             </label>
             <input
@@ -145,13 +145,13 @@ export function OrgLoginForm() {
               onChange={(e) => setName(e.target.value)}
               placeholder="My Team"
               required
-              className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
             />
           </div>
         )}
 
         <div className="mb-4">
-          <label htmlFor="slug" className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <label htmlFor="slug" className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
             Org Slug
           </label>
           <input
@@ -161,13 +161,13 @@ export function OrgLoginForm() {
             onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))}
             placeholder="my-team"
             required
-            className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
           />
-          <p className="mt-1 text-xs text-zinc-400">Lowercase letters, numbers, and hyphens only</p>
+          <p className="mt-1 text-xs text-slate-400">Lowercase letters, numbers, and hyphens only</p>
         </div>
 
         <div className="mb-6">
-          <label htmlFor="password" className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <label htmlFor="password" className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
             Organization Password
           </label>
           <input
@@ -178,9 +178,9 @@ export function OrgLoginForm() {
             placeholder="Shared secret for your team"
             required
             minLength={8}
-            className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
           />
-          <p className="mt-1 text-xs text-zinc-400">
+          <p className="mt-1 text-xs text-slate-400">
             {mode === "create"
               ? "Choose a strong password. It encrypts all data — if lost, data cannot be recovered."
               : "Enter the password shared with your team."}
@@ -196,7 +196,7 @@ export function OrgLoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+          className="w-full rounded-md bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600"
         >
           {loading
             ? "Deriving keys..."

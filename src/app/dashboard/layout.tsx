@@ -63,7 +63,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               sessionStorage.clear();
               router.replace("/");
             }}
-            className="mt-4 text-sm text-zinc-500 underline"
+            className="mt-4 text-sm text-blue-600 underline hover:text-blue-800 dark:text-blue-400"
           >
             Back to login
           </button>
@@ -76,8 +76,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="mb-2 inline-block h-5 w-5 animate-spin rounded-full border-2 border-zinc-300 border-t-zinc-900 dark:border-zinc-600 dark:border-t-zinc-100" />
-          <p className="text-sm text-zinc-400">Deriving encryption keys...</p>
+          <div className="mb-2 inline-block h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-blue-600 dark:border-slate-600 dark:border-t-blue-400" />
+          <p className="text-sm text-slate-500">Deriving encryption keys...</p>
         </div>
       </div>
     );
@@ -99,14 +99,14 @@ function DashboardShell({ orgSlug, children }: { orgSlug: string; children: Reac
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
-      <header className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-3">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+      <header className="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+        <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
-            <a href="/dashboard" className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            <a href="/dashboard" className="text-base font-bold text-slate-900 dark:text-slate-100">
               AI Chat Aggregator
             </a>
-            <span className="rounded bg-zinc-100 px-2 py-0.5 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+            <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
               {orgSlug}
             </span>
           </div>
@@ -115,7 +115,7 @@ function DashboardShell({ orgSlug, children }: { orgSlug: string; children: Reac
               sessionStorage.clear();
               router.replace("/");
             }}
-            className="text-xs text-zinc-400 transition-colors hover:text-zinc-600 dark:hover:text-zinc-300"
+            className="text-xs text-slate-400 transition-colors hover:text-slate-600 dark:hover:text-slate-300"
           >
             Log out
           </button>

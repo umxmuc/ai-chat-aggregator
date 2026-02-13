@@ -12,7 +12,7 @@ export function ConversationView({ id }: { id: string }) {
 
   if (!conversation) {
     return (
-      <div className="py-12 text-center text-sm text-zinc-400">
+      <div className="py-12 text-center text-sm text-slate-400">
         Conversation not found. It may not have been synced yet.
       </div>
     );
@@ -21,11 +21,11 @@ export function ConversationView({ id }: { id: string }) {
   return (
     <div>
       {/* Header */}
-      <div className="mb-6 border-b border-zinc-200 pb-4 dark:border-zinc-800">
-        <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+      <div className="mb-6 border-b border-slate-200 pb-4 dark:border-slate-800">
+        <h1 className="text-lg font-bold text-slate-900 dark:text-slate-100">
           {conversation.title}
         </h1>
-        <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-zinc-400">
+        <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-400">
           <span
             className={clsx(
               "rounded px-1.5 py-0.5 font-medium",
@@ -44,7 +44,7 @@ export function ConversationView({ id }: { id: string }) {
               href={conversation.metadata.source_url as string}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-zinc-500 underline hover:text-zinc-700 dark:hover:text-zinc-300"
+              className="text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
             >
               Source
             </a>
@@ -60,16 +60,26 @@ export function ConversationView({ id }: { id: string }) {
             className={clsx(
               "rounded-lg px-4 py-3",
               msg.role === "user"
-                ? "bg-zinc-100 dark:bg-zinc-800"
+                ? "bg-blue-600 text-white dark:bg-blue-700"
                 : msg.role === "assistant"
-                  ? "bg-white border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-700"
+                  ? "bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-700"
                   : "bg-yellow-50 dark:bg-yellow-900/20"
             )}
           >
-            <div className="mb-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+            <div className={clsx(
+              "mb-1 text-xs font-medium",
+              msg.role === "user"
+                ? "text-blue-100"
+                : "text-slate-500 dark:text-slate-400"
+            )}>
               {msg.role === "user" ? "You" : msg.role === "assistant" ? "Assistant" : "System"}
             </div>
-            <div className="prose prose-sm max-w-none text-zinc-800 dark:prose-invert dark:text-zinc-200">
+            <div className={clsx(
+              "prose prose-sm max-w-none",
+              msg.role === "user"
+                ? "text-white prose-headings:text-white prose-strong:text-white prose-code:text-blue-100"
+                : "text-slate-800 dark:prose-invert dark:text-slate-200"
+            )}>
               <ReactMarkdown rehypePlugins={[rehypeRaw]}>
                 {msg.content}
               </ReactMarkdown>

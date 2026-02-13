@@ -36,7 +36,7 @@ export function ConversationList() {
   return (
     <div>
       {/* Platform filter tabs */}
-      <div className="mb-4 flex gap-1 rounded-md border border-zinc-200 p-1 dark:border-zinc-700">
+      <div className="mb-4 flex gap-1 rounded-md border border-slate-200 p-1 dark:border-slate-700">
         {PLATFORMS.map((p) => (
           <button
             key={p}
@@ -47,8 +47,8 @@ export function ConversationList() {
             className={clsx(
               "flex-1 rounded px-3 py-1.5 text-xs font-medium capitalize transition-colors",
               platform === p
-                ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                : "text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                ? "bg-blue-600 text-white dark:bg-blue-500"
+                : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
             )}
           >
             {p}
@@ -56,14 +56,14 @@ export function ConversationList() {
         ))}
       </div>
 
-      <p className="mb-3 text-xs text-zinc-400">
+      <p className="mb-3 text-xs text-slate-400">
         {total} conversation{total !== 1 ? "s" : ""}
       </p>
 
       {/* Conversation list */}
-      <div className="space-y-1">
+      <div className="space-y-2">
         {conversations.length === 0 ? (
-          <p className="py-8 text-center text-sm text-zinc-400">
+          <p className="py-8 text-center text-sm text-slate-400">
             No conversations yet. Export some from the Chrome extension.
           </p>
         ) : (
@@ -71,14 +71,14 @@ export function ConversationList() {
             <Link
               key={conv.id}
               href={`/dashboard/conversation/${conv.id}`}
-              className="block rounded-md border border-zinc-100 px-4 py-3 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-700 dark:hover:bg-zinc-800/50"
+              className="block rounded-lg border border-slate-200 px-4 py-3 transition-all hover:border-blue-200 hover:shadow-sm dark:border-slate-800 dark:hover:border-slate-700 dark:hover:bg-slate-800/50"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
-                  <h3 className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                  <h3 className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
                     {conv.title}
                   </h3>
-                  <div className="mt-1 flex items-center gap-2 text-xs text-zinc-400">
+                  <div className="mt-1 flex items-center gap-2 text-xs text-slate-400">
                     <span
                       className={clsx(
                         "rounded px-1.5 py-0.5 font-medium",
@@ -93,7 +93,7 @@ export function ConversationList() {
                     {conv.model && <span>{conv.model}</span>}
                   </div>
                 </div>
-                <time className="shrink-0 text-xs text-zinc-400">
+                <time className="shrink-0 text-xs text-slate-400">
                   {new Date(conv.created_at).toLocaleDateString()}
                 </time>
               </div>
@@ -108,17 +108,17 @@ export function ConversationList() {
           <button
             onClick={() => setOffset(Math.max(0, offset - PAGE_SIZE))}
             disabled={offset === 0}
-            className="rounded px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 disabled:opacity-30 dark:text-zinc-400 dark:hover:bg-zinc-800"
+            className="rounded px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 disabled:opacity-30 dark:text-slate-400 dark:hover:bg-slate-800"
           >
             Previous
           </button>
-          <span className="text-xs text-zinc-400">
+          <span className="text-xs text-slate-400">
             {offset + 1}–{Math.min(offset + PAGE_SIZE, total)} of {total}
           </span>
           <button
             onClick={() => setOffset(offset + PAGE_SIZE)}
             disabled={offset + PAGE_SIZE >= total}
-            className="rounded px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 disabled:opacity-30 dark:text-zinc-400 dark:hover:bg-zinc-800"
+            className="rounded px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 disabled:opacity-30 dark:text-slate-400 dark:hover:bg-slate-800"
           >
             Next
           </button>

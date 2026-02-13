@@ -53,17 +53,17 @@ export function SearchBar() {
         onChange={(e) => handleChange(e.target.value)}
         onFocus={() => results.length > 0 && setOpen(true)}
         placeholder="Search messages..."
-        className="w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm focus:border-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+        className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
       />
 
       {open && (
-        <div className="absolute left-0 right-0 top-full z-10 mt-1 max-h-80 overflow-auto rounded-md border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+        <div className="absolute left-0 right-0 top-full z-10 mt-1 max-h-80 overflow-auto rounded-md border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900">
           {results.map((r, i) => (
             <Link
               key={`${r.conversation_id}-${i}`}
               href={`/dashboard/conversation/${r.conversation_id}`}
               onClick={() => setOpen(false)}
-              className="block border-b border-zinc-100 px-4 py-3 transition-colors last:border-0 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
+              className="block border-b border-slate-100 px-4 py-3 transition-colors last:border-0 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50"
             >
               <div className="flex items-center gap-2">
                 <span
@@ -76,12 +76,12 @@ export function SearchBar() {
                 >
                   {r.platform === "chatgpt" ? "GPT" : "Claude"}
                 </span>
-                <span className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                <span className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
                   {r.title}
                 </span>
               </div>
               <p
-                className="mt-1 line-clamp-2 text-xs text-zinc-500 dark:text-zinc-400"
+                className="mt-1 line-clamp-2 text-xs text-slate-500 dark:text-slate-400"
                 dangerouslySetInnerHTML={{ __html: r.snippet }}
               />
             </Link>
