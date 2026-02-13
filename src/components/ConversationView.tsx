@@ -60,7 +60,7 @@ export function ConversationView({ id }: { id: string }) {
             className={clsx(
               "rounded-lg px-4 py-3",
               msg.role === "user"
-                ? "bg-blue-600 text-white dark:bg-blue-700"
+                ? "bg-slate-100 dark:bg-slate-800"
                 : msg.role === "assistant"
                   ? "bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-700"
                   : "bg-yellow-50 dark:bg-yellow-900/20"
@@ -69,7 +69,7 @@ export function ConversationView({ id }: { id: string }) {
             <div className={clsx(
               "mb-1 text-sm font-semibold",
               msg.role === "user"
-                ? "text-blue-100"
+                ? "text-slate-500 dark:text-slate-400"
                 : "text-slate-500 dark:text-slate-400"
             )}>
               {msg.role === "user" ? "You" : msg.role === "assistant" ? "Assistant" : "System"}
@@ -77,7 +77,7 @@ export function ConversationView({ id }: { id: string }) {
             <div className={clsx(
               "prose max-w-none",
               msg.role === "user"
-                ? "text-white prose-headings:text-white prose-strong:text-white prose-code:text-blue-100"
+                ? "text-slate-800 dark:prose-invert dark:text-slate-200"
                 : "text-slate-800 dark:prose-invert dark:text-slate-200"
             )}>
               <ReactMarkdown rehypePlugins={[rehypeRaw]}>
