@@ -5,6 +5,7 @@ import { getConversation } from "@/lib/sqlite";
 import { clsx } from "clsx";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 
 const PLATFORM_BADGE: Record<string, { label: string; classes: string }> = {
   chatgpt: {
@@ -103,7 +104,7 @@ export function ConversationView({ id }: { id: string }) {
                 ? "text-slate-800 dark:prose-invert dark:text-slate-200"
                 : "text-slate-800 dark:prose-invert dark:text-slate-200"
             )}>
-              <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                 {msg.content}
               </ReactMarkdown>
             </div>
