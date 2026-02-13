@@ -68,6 +68,11 @@ export function ConversationView({ id }: { id: string }) {
             </span>
           )}
         </div>
+        {conversation.metadata?._response_keys && (
+          <p className="mt-2 text-xs text-slate-400">
+            API fields: {(conversation.metadata._response_keys as string[]).join(", ")}
+          </p>
+        )}
       </div>
 
       {/* Messages */}
@@ -93,7 +98,7 @@ export function ConversationView({ id }: { id: string }) {
               {msg.role === "user" ? "You" : msg.role === "assistant" ? "Assistant" : "System"}
             </div>
             <div className={clsx(
-              "prose max-w-none",
+              "prose max-w-none overflow-x-auto break-words [&_pre]:overflow-x-auto [&_code]:break-all",
               msg.role === "user"
                 ? "text-slate-800 dark:prose-invert dark:text-slate-200"
                 : "text-slate-800 dark:prose-invert dark:text-slate-200"
