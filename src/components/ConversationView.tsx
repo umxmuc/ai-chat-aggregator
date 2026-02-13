@@ -3,6 +3,8 @@
 import { useApp } from "@/lib/context";
 import { getConversation } from "@/lib/sqlite";
 import { clsx } from "clsx";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
 export function ConversationView({ id }: { id: string }) {
   const { db } = useApp();
@@ -68,9 +70,9 @@ export function ConversationView({ id }: { id: string }) {
               {msg.role === "user" ? "You" : msg.role === "assistant" ? "Assistant" : "System"}
             </div>
             <div className="prose prose-sm max-w-none text-zinc-800 dark:prose-invert dark:text-zinc-200">
-              <pre className="whitespace-pre-wrap break-words font-sans text-sm leading-relaxed">
+              <ReactMarkdown rehypePlugins={[rehypeRaw]}>
                 {msg.content}
-              </pre>
+              </ReactMarkdown>
             </div>
           </div>
         ))}
