@@ -53,9 +53,9 @@ export function ConversationView({ id }: { id: string }) {
           {conversation.model && <span>{conversation.model}</span>}
           <span>{conversation.message_count} messages</span>
           <span>{new Date(conversation.created_at).toLocaleString()}</span>
-          {conversation.metadata?.source_url && (
+          {conversation.source_url && (
             <a
-              href={conversation.metadata.source_url as string}
+              href={conversation.source_url}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
